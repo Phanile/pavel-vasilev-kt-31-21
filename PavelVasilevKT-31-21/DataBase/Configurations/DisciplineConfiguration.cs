@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PavelVasilevKT_31_21.DataBase.Helpers;
 using PavelVasilevKT_31_21.Models;
 
 namespace PavelVasilevKT_31_21.DataBase.Configurations
@@ -12,7 +13,12 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
             builder.Property(discipline => discipline.Id).ValueGeneratedOnAdd();
             builder.HasIndex(discipline => discipline.Id);
 
-            builder.Property(discipline => discipline.Title).IsRequired();
+            builder.Property(discipline => discipline.Title)
+                .IsRequired()
+                .HasColumnName("c_discipline_title")
+                .HasColumnType(ColumnTypeHelper.String)
+                .HasMaxLength(50)
+                .HasComment("Название дисциплины");
         }
     }
 }

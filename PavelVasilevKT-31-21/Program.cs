@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using PavelVasilevKT_31_21.DataBase;
+using PavelVasilevKT_31_21.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -13,6 +14,7 @@ try
 	builder.Services.AddControllers();
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
+	builder.Services.AddServices();
 
 	builder.Services.AddDbContext<TeachersDbContext>(options =>
 	{

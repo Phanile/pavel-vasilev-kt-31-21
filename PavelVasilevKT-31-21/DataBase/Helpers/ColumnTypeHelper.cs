@@ -1,0 +1,16 @@
+﻿namespace PavelVasilevKT_31_21.DataBase.Helpers
+{
+    public class ColumnTypeHelper
+    {
+        public const string Date = "timestamp";
+        public const string Guid = "uuid";
+        public const string String = "varchar";
+        public const string Text = "text";
+        public const string Bool = "bool";
+        public const string Short = "int2";
+        public const string Int = "int4";
+        public const string Long = "int8";
+        public const string Double = "decimal(9, 2)";
+        public const string Decimal = "money";
+    }
+}

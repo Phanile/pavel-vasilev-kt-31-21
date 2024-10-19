@@ -12,8 +12,8 @@ using PavelVasilevKT_31_21.DataBase;
 namespace PavelVasilevKT_31_21.Migrations
 {
     [DbContext(typeof(TeachersDbContext))]
-    [Migration("20240914072952_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241019095338_DBFromZero")]
+    partial class DBFromZero
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,16 +29,22 @@ namespace PavelVasilevKT_31_21.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("department_id")
+                        .HasComment("Идентификатор кафедры");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("HeadId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("head_id")
+                        .HasComment("Идентификатор заведующего кафедры");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HeadId");
 
                     b.HasIndex("Id");
 
@@ -58,7 +64,10 @@ namespace PavelVasilevKT_31_21.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_discipline_title")
+                        .HasComment("Название дисциплины");
 
                     b.HasKey("Id");
 
@@ -78,13 +87,19 @@ namespace PavelVasilevKT_31_21.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DisciplineId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("discipline_id")
+                        .HasComment("Идентификатор дисциплины");
 
                     b.Property<int>("LoadInHours")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("load_in_hours")
+                        .HasComment("Продолжительность дисциплины в часах");
 
                     b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("teacher_id")
+                        .HasComment("Идентификатор преподавателя");
 
                     b.HasKey("Id");
 
@@ -106,11 +121,28 @@ namespace PavelVasilevKT_31_21.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("DepartmentId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_teacher_name")
+                        .HasComment("Имя преподавателя");
+
+                    b.Property<string>("Patronymic")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_teacher_patronymic")
+                        .HasComment("Отчество преподавателя");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_teacher_surname")
+                        .HasComment("Фамилия преподавателя");
 
                     b.HasKey("Id");
 
@@ -119,17 +151,6 @@ namespace PavelVasilevKT_31_21.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("PavelVasilevKT_31_21.Models.Department", b =>
-                {
-                    b.HasOne("PavelVasilevKT_31_21.Models.Teacher", "Head")
-                        .WithMany()
-                        .HasForeignKey("HeadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Head");
                 });
 
             modelBuilder.Entity("PavelVasilevKT_31_21.Models.Discipline", b =>

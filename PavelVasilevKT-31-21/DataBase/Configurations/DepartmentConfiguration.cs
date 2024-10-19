@@ -10,18 +10,29 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
         public void Configure(EntityTypeBuilder<Department> builder)
         {
             builder.HasKey(department => department.Id);
-            builder.Property(department => department.Id).ValueGeneratedOnAdd();
             builder.HasIndex(department => department.Id);
 
-            builder.Property(department => department.HeadId)
+            builder.Property(department => department.Id)
+                .ValueGeneratedOnAdd()
                 .IsRequired()
                 .HasColumnName("department_id")
                 .HasColumnType(ColumnTypeHelper.Int)
                 .HasComment("Идентификатор кафедры");
 
-            builder.Navigation(department => department.Head).AutoInclude();
+            builder.Property(department => department.HeadId)
+                .IsRequired()
+                .HasColumnName("head_id")
+                .HasColumnType(ColumnTypeHelper.Int)
+                .HasComment("Идентификатор заведующего кафедры");
 
-            builder.HasOne(department => department.Head);
+            builder.Property(department => department.Title)
+                .IsRequired()
+                .HasColumnName("c_department_title")
+                .HasColumnType(ColumnTypeHelper.String)
+                .HasMaxLength(50)
+                .HasComment("Название кафедры");
+
+            builder.Navigation(department => department.Teachers).AutoInclude();
         }
     }
 }

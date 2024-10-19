@@ -12,8 +12,8 @@ using PavelVasilevKT_31_21.DataBase;
 namespace PavelVasilevKT_31_21.Migrations
 {
     [DbContext(typeof(TeachersDbContext))]
-    [Migration("20240921105912_UpdateRelationsAndModels")]
-    partial class UpdateRelationsAndModels
+    [Migration("20241019103205_CheckDepartment")]
+    partial class CheckDepartment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,14 +29,16 @@ namespace PavelVasilevKT_31_21.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int4")
+                        .HasColumnName("department_id")
+                        .HasComment("Идентификатор кафедры");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("HeadId")
                         .HasColumnType("int4")
-                        .HasColumnName("department_id")
-                        .HasComment("Идентификатор кафедры");
+                        .HasColumnName("head_id")
+                        .HasComment("Идентификатор заведующего кафедры");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -44,11 +46,9 @@ namespace PavelVasilevKT_31_21.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HeadId");
-
                     b.HasIndex("Id");
 
-                    b.ToTable("Department");
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("PavelVasilevKT_31_21.Models.Discipline", b =>
@@ -121,7 +121,7 @@ namespace PavelVasilevKT_31_21.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("DepartmentId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int4");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -151,17 +151,6 @@ namespace PavelVasilevKT_31_21.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("PavelVasilevKT_31_21.Models.Department", b =>
-                {
-                    b.HasOne("PavelVasilevKT_31_21.Models.Teacher", "Head")
-                        .WithMany()
-                        .HasForeignKey("HeadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Head");
                 });
 
             modelBuilder.Entity("PavelVasilevKT_31_21.Models.Discipline", b =>

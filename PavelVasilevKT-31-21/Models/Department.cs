@@ -5,7 +5,6 @@
         public int Id { get; set; }
         public int HeadId { get; set; }
         public string Title { get; set; }
-        public Teacher Head { get; set; }
         public ICollection<Teacher> Teachers { get; set; }
     }
 }

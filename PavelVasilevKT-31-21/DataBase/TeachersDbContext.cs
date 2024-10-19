@@ -9,6 +9,7 @@ namespace PavelVasilevKT_31_21.DataBase
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Load> Loads { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         public TeachersDbContext(DbContextOptions<TeachersDbContext> options) : base(options)
         {

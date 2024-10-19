@@ -5,7 +5,7 @@ using PavelVasilevKT_31_21.Interfaces;
 namespace PavelVasilevKT_31_21.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]/[action]")]
     public class TeachersController : ControllerBase
     {
         private readonly ILogger<TeachersController> _logger;

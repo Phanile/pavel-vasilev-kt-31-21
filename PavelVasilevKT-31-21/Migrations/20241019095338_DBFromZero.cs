@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PavelVasilevKT_31_21.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DBFromZero : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,14 @@ namespace PavelVasilevKT_31_21.Migrations
                 name: "Department",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    department_id = table.Column<int>(type: "int4", nullable: false, comment: "Идентификатор кафедры")
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    HeadId = table.Column<int>(type: "integer", nullable: false)
+                    head_id = table.Column<int>(type: "int4", nullable: false, comment: "Идентификатор заведующего кафедры"),
+                    Title = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Department", x => x.Id);
+                    table.PrimaryKey("PK_Department", x => x.department_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,8 +31,10 @@ namespace PavelVasilevKT_31_21.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FullName = table.Column<string>(type: "text", nullable: false),
-                    DepartmentId = table.Column<int>(type: "integer", nullable: true)
+                    c_teacher_name = table.Column<string>(type: "varchar", maxLength: 50, nullable: false, comment: "Имя преподавателя"),
+                    c_teacher_surname = table.Column<string>(type: "varchar", maxLength: 50, nullable: false, comment: "Фамилия преподавателя"),
+                    c_teacher_patronymic = table.Column<string>(type: "varchar", maxLength: 50, nullable: false, comment: "Отчество преподавателя"),
+                    DepartmentId = table.Column<int>(type: "int4", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,7 +43,7 @@ namespace PavelVasilevKT_31_21.Migrations
                         name: "FK_Teachers_Department_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Department",
-                        principalColumn: "Id");
+                        principalColumn: "department_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +52,7 @@ namespace PavelVasilevKT_31_21.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    c_discipline_title = table.Column<string>(type: "varchar", maxLength: 50, nullable: false, comment: "Название дисциплины"),
                     TeacherId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -68,36 +71,31 @@ namespace PavelVasilevKT_31_21.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
-                    DisciplineId = table.Column<int>(type: "integer", nullable: false),
-                    LoadInHours = table.Column<int>(type: "integer", nullable: false)
+                    teacher_id = table.Column<int>(type: "int4", nullable: false, comment: "Идентификатор преподавателя"),
+                    discipline_id = table.Column<int>(type: "int4", nullable: false, comment: "Идентификатор дисциплины"),
+                    load_in_hours = table.Column<int>(type: "int4", nullable: false, comment: "Продолжительность дисциплины в часах")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Loads", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Loads_Disciplines_DisciplineId",
-                        column: x => x.DisciplineId,
+                        name: "FK_Loads_Disciplines_discipline_id",
+                        column: x => x.discipline_id,
                         principalTable: "Disciplines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Loads_Teachers_TeacherId",
-                        column: x => x.TeacherId,
+                        name: "FK_Loads_Teachers_teacher_id",
+                        column: x => x.teacher_id,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Department_HeadId",
+                name: "IX_Department_department_id",
                 table: "Department",
-                column: "HeadId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Department_Id",
-                table: "Department",
-                column: "Id");
+                column: "department_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Disciplines_Id",
@@ -110,9 +108,9 @@ namespace PavelVasilevKT_31_21.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loads_DisciplineId",
+                name: "IX_Loads_discipline_id",
                 table: "Loads",
-                column: "DisciplineId");
+                column: "discipline_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loads_Id",
@@ -120,9 +118,9 @@ namespace PavelVasilevKT_31_21.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loads_TeacherId",
+                name: "IX_Loads_teacher_id",
                 table: "Loads",
-                column: "TeacherId");
+                column: "teacher_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_DepartmentId",
@@ -133,23 +131,11 @@ namespace PavelVasilevKT_31_21.Migrations
                 name: "IX_Teachers_Id",
                 table: "Teachers",
                 column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Department_Teachers_HeadId",
-                table: "Department",
-                column: "HeadId",
-                principalTable: "Teachers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Department_Teachers_HeadId",
-                table: "Department");
-
             migrationBuilder.DropTable(
                 name: "Loads");
 

@@ -19,26 +19,38 @@ namespace PavelVasilevKT_31_21.Services
         {
             var query = _dbContext.Loads.AsQueryable();
 
-            query = ApplyFilters(query, filter);
+            query = ApplyFilters(query, filter, out bool filtered);
 
-            return await query.AsNoTracking().ToListAsync();
+            if (filtered)
+            {
+                return await query.AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                return [];
+            }
         }
 
-        private IQueryable<Load> ApplyFilters(IQueryable<Load> query, LoadFilter filter)
+        private IQueryable<Load> ApplyFilters(IQueryable<Load> query, LoadFilter filter, out bool filtered)
         {
+            filtered = false;
+
             if (!string.IsNullOrWhiteSpace(filter.TeacherName))
             {
                 query = query.Where(load => load.Teacher.Name == filter.TeacherName);
+                filtered = true;
             }
 
             if (!string.IsNullOrWhiteSpace(filter.DepartmentTitle))
             {
                 query = query.Where(load => load.Teacher.Department.Title == filter.DepartmentTitle);
+                filtered = true;
             }
 
             if (!string.IsNullOrWhiteSpace(filter.DisciplineTitle))
             {
                 query = query.Where(load => load.Discipline.Title == filter.DisciplineTitle);
+                filtered = true;
             }
 
             return query;

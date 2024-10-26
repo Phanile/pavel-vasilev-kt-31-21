@@ -42,6 +42,7 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
                 .HasComment("Отчество преподавателя");
 
             builder.Navigation(teacher => teacher.Disciplines).AutoInclude();
+            builder.Navigation(teacher => teacher.Department).AutoInclude();
         }
     }
 }

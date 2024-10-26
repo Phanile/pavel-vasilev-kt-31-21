@@ -8,6 +8,8 @@ namespace PavelVasilevKT_31_21.ServiceExtensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IDisciplineService, DisciplineService>();
+            services.AddScoped<ILoadService, LoadService>();
 
             return services;
         }

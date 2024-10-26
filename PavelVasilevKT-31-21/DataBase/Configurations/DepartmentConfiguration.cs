@@ -7,9 +7,16 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
 {
     public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
     {
+        private const string TableName = "cd_departments";
+
         public void Configure(EntityTypeBuilder<Department> builder)
         {
-            builder.HasKey(department => department.Id);
+            builder.ToTable(TableName);
+
+            builder
+                .HasKey(department => department.Id)
+                .HasName($"pk_{TableName}_department_id");
+            
             builder.HasIndex(department => department.Id);
 
             builder.Property(department => department.Id)

@@ -7,11 +7,20 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
 {
     public class LoadConfiguration : IEntityTypeConfiguration<Load>
     {
+        private const string TableName = "cd_loads";
+
         public void Configure(EntityTypeBuilder<Load> builder)
         {
-            builder.HasKey(load => load.Id);
+            builder
+                .HasKey(load => load.Id)
+                .HasName($"pk_{TableName}_load_id");
+
             builder.Property(load => load.Id).ValueGeneratedOnAdd();
             builder.HasIndex(load => load.Id);
+
+            builder.ToTable(TableName).HasIndex(load => load.TeacherId, $"idx_{TableName}_fk_f_teacher_id");
+            builder.ToTable(TableName).HasIndex(load => load.DisciplineId, $"idx_{TableName}_fk_f_discipline_id");
+
 
             builder.Property(load => load.TeacherId)
                 .IsRequired()
@@ -35,8 +44,19 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
             builder.Navigation(load => load.Teacher).AutoInclude();
             builder.Navigation(load => load.Discipline).AutoInclude();
 
-            builder.HasOne(load => load.Teacher);
-            builder.HasOne(load => load.Discipline);
+            builder
+                .ToTable(TableName)
+                .HasOne(load => load.Teacher)
+                .WithMany()
+                .HasForeignKey(load => load.TeacherId)
+                .HasConstraintName("fk_f_teacher_id");
+
+            builder
+                .ToTable(TableName)
+                .HasOne(load => load.Discipline)
+                .WithMany()
+                .HasForeignKey(load => load.DisciplineId)
+                .HasConstraintName("fk_f_discipline_id");
         }
     }
 }

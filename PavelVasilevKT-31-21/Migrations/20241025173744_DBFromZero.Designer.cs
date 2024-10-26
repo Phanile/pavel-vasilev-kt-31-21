@@ -12,8 +12,8 @@ using PavelVasilevKT_31_21.DataBase;
 namespace PavelVasilevKT_31_21.Migrations
 {
     [DbContext(typeof(TeachersDbContext))]
-    [Migration("20241019103205_CheckDepartment")]
-    partial class CheckDepartment
+    [Migration("20241025173744_DBFromZero")]
+    partial class DBFromZero
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,9 +42,13 @@ namespace PavelVasilevKT_31_21.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_department_title")
+                        .HasComment("Название кафедры");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_cd_departments_department_id");
 
                     b.HasIndex("Id");
 
@@ -69,7 +73,8 @@ namespace PavelVasilevKT_31_21.Migrations
                         .HasColumnName("c_discipline_title")
                         .HasComment("Название дисциплины");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_cd_disciplines_discipline_id");
 
                     b.HasIndex("Id");
 
@@ -101,15 +106,16 @@ namespace PavelVasilevKT_31_21.Migrations
                         .HasColumnName("teacher_id")
                         .HasComment("Идентификатор преподавателя");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("DisciplineId");
+                    b.HasKey("Id")
+                        .HasName("pk_cd_loads_load_id");
 
                     b.HasIndex("Id");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex(new[] { "DisciplineId" }, "idx_cd_loads_fk_f_discipline_id");
 
-                    b.ToTable("Loads");
+                    b.HasIndex(new[] { "TeacherId" }, "idx_cd_loads_fk_f_teacher_id");
+
+                    b.ToTable("cd_loads", (string)null);
                 });
 
             modelBuilder.Entity("PavelVasilevKT_31_21.Models.Teacher", b =>
@@ -144,7 +150,8 @@ namespace PavelVasilevKT_31_21.Migrations
                         .HasColumnName("c_teacher_surname")
                         .HasComment("Фамилия преподавателя");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_cd_teachers_teacher_id");
 
                     b.HasIndex("DepartmentId");
 
@@ -166,13 +173,15 @@ namespace PavelVasilevKT_31_21.Migrations
                         .WithMany()
                         .HasForeignKey("DisciplineId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_f_discipline_id");
 
                     b.HasOne("PavelVasilevKT_31_21.Models.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_f_teacher_id");
 
                     b.Navigation("Discipline");
 

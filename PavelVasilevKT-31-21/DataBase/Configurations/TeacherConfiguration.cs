@@ -7,9 +7,16 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
 {
     public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
     {
+        private const string TableName = "cd_teachers";
+
         public void Configure(EntityTypeBuilder<Teacher> builder)
         {
-            builder.HasKey(teacher => teacher.Id);
+            builder.ToTable(TableName);
+
+            builder
+                .HasKey(teacher => teacher.Id)
+                .HasName($"pk_{TableName}_teacher_id");
+
             builder.Property(teacher => teacher.Id).ValueGeneratedOnAdd();
             builder.HasIndex(teacher => teacher.Id);
 

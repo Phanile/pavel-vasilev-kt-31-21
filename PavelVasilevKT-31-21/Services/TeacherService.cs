@@ -24,7 +24,7 @@ namespace PavelVasilevKT_31_21.Services
                 return teacher;
             }
 
-            return null;
+            return await Task.FromResult<Teacher>(null);
         }
     }
 }

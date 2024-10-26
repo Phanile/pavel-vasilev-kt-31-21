@@ -7,9 +7,16 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
 {
     public class DisciplineConfiguration : IEntityTypeConfiguration<Discipline>
     {
+        private const string TableName = "cd_disciplines";
+
         public void Configure(EntityTypeBuilder<Discipline> builder)
         {
-            builder.HasKey(discipline => discipline.Id);
+            builder.ToTable(TableName);
+            
+            builder
+                .HasKey(discipline => discipline.Id)
+                .HasName($"pk_{TableName}_discipline_id");
+
             builder.Property(discipline => discipline.Id).ValueGeneratedOnAdd();
             builder.HasIndex(discipline => discipline.Id);
 

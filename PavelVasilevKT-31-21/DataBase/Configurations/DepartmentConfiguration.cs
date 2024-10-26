@@ -38,8 +38,6 @@ namespace PavelVasilevKT_31_21.DataBase.Configurations
                 .HasColumnType(ColumnTypeHelper.String)
                 .HasMaxLength(50)
                 .HasComment("Название кафедры");
-
-            builder.Navigation(department => department.Teachers).AutoInclude();
         }
     }
 }

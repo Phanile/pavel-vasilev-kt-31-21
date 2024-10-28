@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace PavelVasilevKT_31_21.Middlewares
 {
@@ -24,15 +25,53 @@ namespace PavelVasilevKT_31_21.Middlewares
                 _logger.LogError($"Ошибка! : {e.Message}");
 
                 var httpResponse = context.Response;
+                httpResponse.ContentType = "application/json";
 
-                //var responseModel = new ResponseModel<object>
-                //{
-                //    Succeeded = false,
-                //    Message = exception.Message
-                //};
+                var responseModel = new ResponseModel<object>
+                {
+                    Successed = false,
+                    Message = e.Message
+                };
 
-                throw;
+                switch (e)
+                {
+                    default:
+                        httpResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        responseModel.Errors = new List<string>
+                        {
+                            e.InnerException?.Message
+                        };
+                        break;
+                }
+
+                await httpResponse.WriteAsJsonAsync(responseModel);
             }
+        }
+    }
+
+    public class ResponseModel<T>
+    {
+        public bool Successed { get; set; }
+        public string Message { get; set; }
+        public List<string> Errors { get; set; }
+        public T Data { get; set; }
+
+        public ResponseModel()
+        {
+            
+        }
+
+        public ResponseModel(T data, string message = null) 
+        {
+            Successed = true;
+            Message = message;
+            Data = data;
+        }
+
+        public ResponseModel(string message)
+        {
+            Successed = true;
+            Message = message;
         }
     }
 }

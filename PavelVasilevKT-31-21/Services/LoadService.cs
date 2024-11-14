@@ -28,12 +28,12 @@ namespace PavelVasilevKT_31_21.Services
         {
             if (!string.IsNullOrWhiteSpace(filter.TeacherName))
             {
-                query = query.Where(load => load.Teacher.Name == filter.TeacherName);
+                query.Where(load => load.Teacher.Name == filter.TeacherName);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.DepartmentTitle))
             {
-                query = query.Where(load => load.Teacher.Department.Title == filter.DepartmentTitle);
+                query.Where(load => load.Teacher.Department.Title == filter.DepartmentTitle);
             }
 
             if (!string.IsNullOrWhiteSpace(filter.DisciplineTitle))

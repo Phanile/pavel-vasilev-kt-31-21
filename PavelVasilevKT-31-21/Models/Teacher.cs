@@ -7,8 +7,8 @@
 		public string Surname { get; set; }
 		public string Patronymic { get; set; }
 		public ICollection<Discipline> Disciplines { get; set; }
-		public Department Department { get; set; }
 		public int DepartmentId { get; set; }
+		public Department Department { get; set; }
 
 		public bool HasLongPatronymic => Patronymic.Length > 5;
 	}

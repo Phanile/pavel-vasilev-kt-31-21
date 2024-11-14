@@ -3,5 +3,6 @@
     public class CreateDisciplineDTO
     {
         public string Title { get; set; }
+        public int TeacherId { get; set; }
     }
 }

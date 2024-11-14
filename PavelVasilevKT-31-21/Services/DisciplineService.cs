@@ -20,7 +20,8 @@ namespace PavelVasilevKT_31_21.Services
             await _dbContext.Disciplines.AddAsync(
                 new Discipline
                 {
-                    Title = dto.Title
+                    Title = dto.Title,
+                    TeacherId = dto.TeacherId
                 }
             );
 
